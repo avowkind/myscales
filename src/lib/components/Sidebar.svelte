@@ -1,0 +1,116 @@
+<script lang="ts">
+	import { page } from '$app/stores';
+	import { namedByFamily, routeOf, search, signatureLabel, type ScaleRecord } from '$lib/catalog';
+
+	let query = $state('');
+	let groups = namedByFamily();
+	let results = $derived(query.trim() ? search(query) : []);
+
+	function active(scale: ScaleRecord): boolean {
+		return $page.url.pathname === `/scale/${routeOf(scale)}`;
+	}
+</script>
+
+<nav class="sidebar">
+	<a class="brand" href="/scale/major">MyScales</a>
+
+	<input class="search" placeholder="search name, mood, tune…" bind:value={query} />
+
+	{#if query.trim()}
+		<div class="group">
+			<div class="group-label">Results</div>
+			{#if results.length === 0}
+				<div class="empty">no matches</div>
+			{/if}
+			{#each results as s}
+				<a class="item" class:active={active(s)} href="/scale/{routeOf(s)}">{s.name}</a>
+			{/each}
+		</div>
+	{:else}
+		{#each groups as g}
+			<div class="group">
+				<div class="group-label">{g.label}</div>
+				{#each g.scales as s}
+					<a class="item" class:active={active(s)} href="/scale/{routeOf(s)}">
+						{s.name}<span class="sig">{signatureLabel(s)}</span>
+					</a>
+				{/each}
+			</div>
+		{/each}
+		<div class="group">
+			<div class="group-label">Explorer</div>
+			<a class="item" class:active={$page.url.pathname === '/explorer'} href="/explorer">
+				All generated scales →
+			</a>
+		</div>
+	{/if}
+</nav>
+
+<style>
+	.sidebar {
+		width: 250px;
+		flex: 0 0 250px;
+		height: 100vh;
+		overflow-y: auto;
+		border-right: 1px solid var(--line-soft);
+		padding: 1rem 0.75rem 3rem;
+		background: var(--bg-side);
+		font-size: 0.9rem;
+	}
+	.brand {
+		display: block;
+		font-weight: 800;
+		font-size: 1.2rem;
+		color: var(--accent);
+		text-decoration: none;
+		margin-bottom: 0.75rem;
+	}
+	.search {
+		width: 100%;
+		padding: 0.4rem 0.5rem;
+		border: 1px solid var(--line-soft);
+		border-radius: 6px;
+		margin-bottom: 0.75rem;
+		font-size: 0.85rem;
+	}
+	.group {
+		margin-bottom: 0.85rem;
+	}
+	.group-label {
+		text-transform: uppercase;
+		font-size: 0.68rem;
+		letter-spacing: 0.06em;
+		color: var(--ink-soft);
+		margin-bottom: 0.25rem;
+		font-weight: 700;
+	}
+	.item {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 0.5rem;
+		padding: 0.28rem 0.5rem;
+		border-radius: 5px;
+		color: var(--ink);
+		text-decoration: none;
+	}
+	.item:hover {
+		background: var(--hover);
+	}
+	.item.active {
+		background: var(--accent);
+		color: #fff;
+	}
+	.sig {
+		font-size: 0.65rem;
+		color: var(--ink-soft);
+		font-variant-numeric: tabular-nums;
+	}
+	.item.active .sig {
+		color: rgba(255, 255, 255, 0.85);
+	}
+	.empty {
+		color: var(--ink-soft);
+		padding: 0.3rem 0.5rem;
+	}
+</style>

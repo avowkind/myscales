@@ -1,0 +1,64 @@
+:root {
+	--bg: #ffffff;
+	--bg-side: #f7f7f5;
+	--bg-card: #fcfcfb;
+	--ink: #1d1f24;
+	--ink-soft: #6b7280;
+	--accent: #3454d1;
+	--line-soft: #d7d9de;
+	--line-faint: #e8eaee;
+	--hover: #ececf3;
+	--key-white: #ffffff;
+	--key-black: #2a2d34;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	background: var(--bg);
+	color: var(--ink);
+	font-family:
+		'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+.app {
+	display: flex;
+	align-items: stretch;
+	min-height: 100vh;
+}
+
+.main {
+	flex: 1;
+	min-width: 0;
+	padding: 1.25rem 1.75rem;
+}
+
+button {
+	font: inherit;
+}
+
+/* ── print: A4 landscape, full width, no sidebar/controls (DESIGN §11) ── */
+@media print {
+	@page {
+		size: A4 landscape;
+		margin: 8mm;
+	}
+	.sidebar,
+	.no-print {
+		display: none !important;
+	}
+	.app {
+		display: block;
+	}
+	.main {
+		padding: 0;
+	}
+	:root {
+		--bg-card: #ffffff;
+	}
+}
