@@ -1,7 +1,6 @@
 # Proposal: circular Earth-Mover scale glyph
 
-*Ticket T2. Status: proposal only — not for implementation yet. Pairs with the
-in-chat illustration.*
+*Ticket T2. Status: **implemented** (ScaleGlyph component).*
 
 A tiny, recognisable icon for every scale, built from the same pitch-class circle
 the Earth-Mover metric (T1) lives on.

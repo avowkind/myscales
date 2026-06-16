@@ -1,6 +1,6 @@
 # Proposal: laying out the Explorer as a similarity map
 
-*Status: proposal only — not for implementation yet. Pairs with the in-chat illustration.*
+*Status: **implemented** (EMD ego-network on each scale page).*
 
 The Explorer currently sorts ~1,226 shapes by pitch-class number — a stable
 index, but the ordering is arbitrary to the ear. This proposes laying scales out

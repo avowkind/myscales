@@ -5,3 +5,4 @@ export * from './spelling';
 export * from './fingering';
 export * from './colors';
 export * from './emd';
+export * from './rhythm';

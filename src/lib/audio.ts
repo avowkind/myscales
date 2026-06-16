@@ -66,3 +66,55 @@ export function playScale(ascMidis: number[], step = 0.32) {
 	const down = [...ascMidis].reverse().slice(1);
 	playSequence([...ascMidis, ...down], step);
 }
+
+// ── T3: wood-block rhythm loop ──────────────────────────────────────────────
+function woodblock(time: number, accent: boolean) {
+	const ctx = getCtx();
+	const osc = ctx.createOscillator();
+	const filt = ctx.createBiquadFilter();
+	const gain = ctx.createGain();
+	osc.type = 'square';
+	osc.frequency.value = accent ? 1250 : 950;
+	filt.type = 'bandpass';
+	filt.frequency.value = accent ? 1500 : 1100;
+	filt.Q.value = 5;
+	const v = accent ? 0.5 : 0.3;
+	gain.gain.setValueAtTime(v, time);
+	gain.gain.exponentialRampToValueAtTime(0.0006, time + 0.055);
+	osc.connect(filt);
+	filt.connect(gain);
+	gain.connect(ctx.destination);
+	osc.start(time);
+	osc.stop(time + 0.08);
+}
+
+let rhythmTimer: ReturnType<typeof setInterval> | null = null;
+
+/** Loop a click pattern: onsets within a cycle of `pulses`, downbeat accented. */
+export function startRhythm(onsetSet: Set<number>, pulses: number, pulseDur: number) {
+	stopRhythm();
+	const ctx = getCtx();
+	if (ctx.state === 'suspended') ctx.resume();
+	let pulse = 0;
+	let nextTime = ctx.currentTime + 0.1;
+	const lookahead = 0.12;
+	rhythmTimer = setInterval(() => {
+		while (nextTime < ctx.currentTime + lookahead) {
+			const p = pulse % pulses;
+			if (onsetSet.has(p)) woodblock(nextTime, p === 0);
+			nextTime += pulseDur;
+			pulse++;
+		}
+	}, 25);
+}
+
+export function stopRhythm() {
+	if (rhythmTimer) {
+		clearInterval(rhythmTimer);
+		rhythmTimer = null;
+	}
+}
+
+export function rhythmPlaying(): boolean {
+	return rhythmTimer !== null;
+}

@@ -1,7 +1,6 @@
 # Proposal: scale as rhythm (deep-rhythm sonification)
 
-*Ticket T3. Status: proposal only — not for implementation yet. Pairs with the
-in-chat illustration.*
+*Ticket T3. Status: **implemented** (rhythm panel on each scale page).*
 
 ## Idea
 

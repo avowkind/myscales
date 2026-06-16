@@ -18,6 +18,7 @@
 	import NotationStave from '$lib/components/NotationStave.svelte';
 	import ScaleGlyph from '$lib/components/ScaleGlyph.svelte';
 	import EgoNetwork from '$lib/components/EgoNetwork.svelte';
+	import RhythmPanel from '$lib/components/RhythmPanel.svelte';
 
 	let scale = $derived(getScale($page.params.id));
 	let tonic = $derived<Tonic>(KEY_CHOICES[prefs.tonicPc][prefs.pref]);
@@ -150,6 +151,15 @@
 			{#if scale.description}
 				<p class="desc">{scale.description}</p>
 			{/if}
+		</section>
+	</div>
+
+	<div class="row">
+		<section class="card rhythm-card">
+			<h2 class="section-label">Rhythm · the scale as a looping click cycle</h2>
+			{#key scale.id}
+				<RhythmPanel steps={scale.steps} />
+			{/key}
 		</section>
 	</div>
 
