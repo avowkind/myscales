@@ -15,3 +15,10 @@ colour **and** thickness). Modes read as rotations of the ring; stacking two gly
 shows which notes move (the EMD transport). Used as the cell/node art across the
 Explorer (T1). Detail: [SCALE-GLYPH.md](SCALE-GLYPH.md).
 **Status:** proposal.
+
+## T3 — Scale as rhythm (deep-rhythm sonification)
+Play any scale as a looping click pattern: its notes become onsets on a 12-pulse
+cycle (steps = inter-onset intervals), with the downbeat accented. The major scale
+gives the diatonic rhythm `[x . x . x x . x . x . x]`. The T2 glyph doubles as the
+rhythm necklace with a sweeping playhead. Detail: [SCALE-RHYTHM.md](SCALE-RHYTHM.md).
+**Status:** proposal.

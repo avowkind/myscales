@@ -39,4 +39,5 @@ smplr (sampled piano) + Web MIDI.
 ## Backlog
 
 Proposed-but-unbuilt features live in [tickets/](tickets/) — currently the EMD
-similarity map (T1) and the circular scale glyph (T2).
+similarity map (T1), the circular scale glyph (T2), and scale-as-rhythm
+sonification (T3).
