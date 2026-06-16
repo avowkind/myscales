@@ -2,6 +2,7 @@
 // (DESIGN.md §3.2). Lookups resolve either an id or a slug.
 import { NAMED_SCALES } from './named';
 import { generateScales } from './generate';
+import { circularEMD } from '../theory/emd';
 import { FAMILY_ORDER, FAMILY_LABEL, FAMILY_COLOR } from './types';
 import type { ScaleRecord, Family } from './types';
 
@@ -68,6 +69,21 @@ export function explorerScales(): ScaleRecord[] {
 	return ALL_SCALES.filter(
 		(s) => s.steps.length >= 5 && s.steps.length <= 8 && Math.max(...s.steps) <= 4
 	).sort((a, b) => a.pcNumber - b.pcNumber);
+}
+
+export interface Neighbour {
+	scale: ScaleRecord;
+	d: number;
+}
+
+/** Nearest scales by circular EMD (the ego-network around `scale`). */
+export function neighbours(scale: ScaleRecord, k = 8, namedOnly = false): Neighbour[] {
+	const pool = namedOnly ? ALL_SCALES.filter((s) => s.named) : ALL_SCALES;
+	return pool
+		.filter((s) => s.id !== scale.id)
+		.map((s) => ({ scale: s, d: circularEMD(scale.steps, s.steps) }))
+		.sort((a, b) => a.d - b.d)
+		.slice(0, k);
 }
 
 export function search(query: string): ScaleRecord[] {

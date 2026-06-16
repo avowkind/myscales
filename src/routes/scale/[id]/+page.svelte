@@ -17,6 +17,7 @@
 	import Keyboard from '$lib/components/Keyboard.svelte';
 	import NotationStave from '$lib/components/NotationStave.svelte';
 	import ScaleGlyph from '$lib/components/ScaleGlyph.svelte';
+	import EgoNetwork from '$lib/components/EgoNetwork.svelte';
 
 	let scale = $derived(getScale($page.params.id));
 	let tonic = $derived<Tonic>(KEY_CHOICES[prefs.tonicPc][prefs.pref]);
@@ -151,6 +152,13 @@
 			{/if}
 		</section>
 	</div>
+
+	<section class="card neigh-card">
+		<h2 class="section-label">Neighbourhood · nearest scales by ear (Earth-Mover distance)</h2>
+		{#key scale.id}
+			<EgoNetwork {scale} />
+		{/key}
+	</section>
 {/if}
 
 <style>
@@ -275,6 +283,9 @@
 	.rel-card {
 		flex: 1 1 38%;
 		min-width: 280px;
+	}
+	.neigh-card {
+		margin-bottom: 0.8rem;
 	}
 	table.notes {
 		border-collapse: collapse;
