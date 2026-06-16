@@ -54,9 +54,15 @@ button {
 	}
 	.app {
 		display: block;
+		min-height: 0; /* the base 100vh forces a full page → blank overflow page */
 	}
 	.main {
 		padding: 0;
+		min-height: 0;
+	}
+	html,
+	body {
+		height: auto;
 	}
 	:root {
 		--bg-card: #ffffff;
