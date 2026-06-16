@@ -1,8 +1,9 @@
-# MyScales — Design Document
+# ScaleShaper — Design Document
 
-*A local, data-driven web app for understanding and practising piano scales.*
+*Actively shape your understanding of scale structure, fingering, and sound.*
 
-Status: **design draft** (no implementation decisions locked beyond what is stated here).
+Status: **implemented** (SvelteKit SPA on GitHub Pages). Original design draft; tickets T1–T3
+are built. See [tickets/](tickets/) for feature history.
 Author interview captured in [interview.md](interview.md). Date: 2026-06-16.
 
 ---
@@ -165,8 +166,9 @@ pattern are the same *shape* in different modes; the Explorer can either:
 - list **one representative per rotation-class** (the "prime form"), or
 - list **all rotations** so each mode appears.
 
-→ *Open decision 3.1: collapse rotations to prime form, or show every mode?*
-Recommendation: show every rotation but visually group rotation-families.
+→ **Decision (built):** show every rotation; the Explorer grid lists all rooted shapes and
+named scales are tinted by `family`. An ego-network on each scale page shows EMD neighbours
+(§15.2); a full MDS/UMAP atlas is deferred.
 
 ### 3.2 Naming — by shared `id`
 
@@ -241,8 +243,7 @@ A **non-printing sidebar** (left) holds the navigation tree (§8).
   (e.g. "E♭ = ♭3").
 - Click/drag interactions are audio (§5.4).
 
-→ *Open decision 5.2: show RH and LH fingerings simultaneously (stacked) or via a
-hand toggle?* Recommendation: stacked, with a toggle to isolate one hand.
+→ **Decision (built):** stacked RH + LH fingerings on the keyboard.
 
 ### 5.3 Grand staff
 
@@ -288,8 +289,8 @@ low-ink versions):
 signature colours; their ♭/♯ alterations render as a darker/lighter shade of the
 same hue; degrees 2/3/6 use neutral.
 
-→ *Open decision 6: exact hex values.* I'll propose a colourblind-safe, print-safe
-palette in implementation and you can tune it.
+→ **Decision (built):** colourblind-safe gap palette in `theory/colors.ts`; print stylesheet
+lightens colours for ink economy.
 
 ---
 
@@ -314,9 +315,8 @@ True key signatures are a diatonic concept. For modes we can notate using the
 back to **explicit inline accidentals** with no clef signature. The stave clearly
 reflects whichever path applies.
 
-→ *Open decision 7.3: for the 7 modes, prefer the parent-major key signature, or
-the tonic-major signature + accidentals (parallel framing)?* Your "modes derive
-from the parent major" worldview suggests **parent-major signature** — recommended.
+→ **Decision (built):** parent-major key signature for modes where applicable; symmetric and
+generated scales use inline accidentals.
 
 ---
 
@@ -328,7 +328,9 @@ from the parent major" worldview suggests **parent-major signature** — recomme
 - **Search** by name, alias, **character, or example tune** (so *"Caravan"* or
   *"Egyptian"* finds the right scale) — directly serving your worldview.
 - Each page lists **close relatives** (`relations`) as links.
-- The **Explorer** view (§3) browses the full generated set by interval signature.
+- The **Explorer** view (§3) browses the full generated set by interval signature (glyph cells).
+- Each scale page includes an **ego-network** of nearest neighbours by circular Earth-Mover
+  distance (§15.2) and a **rhythm panel** that sonifies the scale as a click loop (§15.3).
 
 URLs: `/(scale)/[scaleId]?key=Eb&acc=flat` — shareable/bookmarkable, and the key &
 enharmonic state live in the query string.
@@ -353,8 +355,7 @@ future chord feature.
 - **Rendering libs:**
   - Keyboard & interval line: **custom SVG** (full control over fills, finger
     numbers, gap colours, print scaling).
-  - Stave: **VexFlow** or **abcjs** (→ open decision 9: pick after a spike;
-    abcjs is terser, VexFlow more controllable).
+  - Stave: **VexFlow** (chosen after spike).
   - Audio: **Web Audio API** + a sampled-piano library (e.g. a soundfont player);
     **Web MIDI API** for the optional output path.
 - **Print:** dedicated `@media print` stylesheet with `@page { size: A4 landscape }`
@@ -423,13 +424,43 @@ Not built now, but the architecture anticipates it:
 
 ## 13. Open decisions to confirm
 
-| # | Decision | Recommendation |
-|---|----------|----------------|
-| 3.1 | Explorer: collapse rotations to prime form, or show every mode? | Show every rotation, grouped by family |
-| 5.2 | Keyboard: both hands stacked, or hand toggle? | Stacked + isolate toggle |
-| 6 | Exact gap & degree colour hex values | Propose colourblind/print-safe palette to tune |
-| 7.3 | Mode key signatures: parent-major vs parallel-tonic | Parent-major signature |
-| 9 | Stave library: VexFlow vs abcjs | Decide after a short spike |
+| # | Decision | Status |
+|---|----------|--------|
+| 3.1 | Explorer: collapse rotations to prime form, or show every mode? | **Built:** every rotation in grid |
+| 5.2 | Keyboard: both hands stacked, or hand toggle? | **Built:** stacked |
+| 6 | Exact gap & degree colour hex values | **Built:** `theory/colors.ts` |
+| 7.3 | Mode key signatures: parent-major vs parallel-tonic | **Built:** parent-major |
+| 9 | Stave library: VexFlow vs abcjs | **Built:** VexFlow |
+| — | Full similarity atlas (MDS/UMAP of all scales) | **Deferred** — ego-network shipped |
+| — | Glyph comparison mode (stack two, show EMD transport) | **Open** |
+
+---
+
+## 15. Implemented extensions (tickets T1–T3)
+
+### 15.1 Circular scale glyph (T2)
+
+A donut SVG on the 12 pitch-class clock with the root at 12 o'clock. Each gap between
+consecutive notes is an arc whose **thickness** (primary) and **colour** (backup) encode
+semitone size. Modes are literal rotations of the ring.
+
+Used in: sidebar list, Explorer cells, scale-page header, ego-network nodes, rhythm
+playhead overlay. Component: `ScaleGlyph.svelte`; reuses `theory/colors`.
+
+### 15.2 Ego-network neighbourhood (T1)
+
+On each scale page, scales within small circular **Earth-Mover distance** (voice-leading
+effort on the pitch-class circle) are shown as an interactive graph. Nodes render as
+glyphs; hover shows name, interval signature, and distance. Metric and kNN logic live in
+`theory/emd.ts`; UI in `EgoNetwork.svelte`. A global MDS/UMAP atlas remains deferred.
+
+### 15.3 Scale as rhythm (T3)
+
+Any scale's pitch classes on a 12-pulse cycle form a **deep rhythm** (Toussaint). The
+rhythm panel plays a looping wood-block click pattern with accented downbeat, box notation
+`[x . x . …]`, and a sweeping playhead on the glyph. Two readings: 12-pulse chromatic
+(default) and n-pulse metre. **Deep** and **Euclidean / maximally-even** badges where
+applicable. Logic in `theory/rhythm.ts`; UI in `RhythmPanel.svelte`.
 
 ---
 

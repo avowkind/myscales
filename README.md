@@ -1,9 +1,10 @@
-# MyScales
+# ScaleShaper
 
-A local, data-driven web app for understanding and practising piano scales.
+**Actively shape your understanding of scale structure, fingering, and sound.**
+
 See [DESIGN.md](DESIGN.md) for the full design and rationale.
 
-**Live:** https://avowkind.github.io/myscales/ — auto-deployed from `main` via GitHub Actions.
+**Live:** https://avowkind.github.io/scaleshaper/ — auto-deployed from `main` via GitHub Actions.
 
 ## Run
 
@@ -27,8 +28,11 @@ src/lib/theory/      pure music-theory core (framework-free, unit-testable)
   spelling.ts        note spelling per key + key-signature logic
   fingering.ts       rule-based classical fingering, per hand, per key
   colors.ts          gap-size + degree-signature palettes
+  emd.ts             circular Earth-Mover distance, ego-network neighbours
+  rhythm.ts          deep-rhythm predicates, box notation, Euclidean badges
 src/lib/catalog/     named seed scales + the encyclopedia generator, merged by id
-src/lib/components/  IntervalLine, Keyboard, NotationStave (VexFlow), Sidebar
+src/lib/components/  IntervalLine, Keyboard, NotationStave, ScaleGlyph, EgoNetwork,
+                     RhythmPanel, Sidebar, AboutDialog
 src/routes/          SPA shell, /scale/[id], /explorer
 scripts/sanity.ts    quick theory check — `npx tsx scripts/sanity.ts`
 ```
@@ -36,8 +40,23 @@ scripts/sanity.ts    quick theory check — `npx tsx scripts/sanity.ts`
 Stack: SvelteKit (static adapter, client-only SPA) · VexFlow (notation) ·
 smplr (sampled piano) + Web MIDI.
 
+## Features
+
+- **Interval line** — colour-coded gap sizes, the hero of every scale page
+- **Keyboard + grand staff** — two octaves, fingering, key-specific spelling
+- **Audio** — sampled piano or Web MIDI; click/drag keys
+- **Scale glyph** — iconic donut per scale (pitch-class clock); modes = rotations
+- **Rhythm panel** — play the scale as a looping click pattern (12-pulse or n-pulse)
+- **Neighbourhood** — ego-network of aurally nearby scales (Earth-Mover distance)
+- **Explorer** — browse ~1,200+ generated shapes; family-tinted named scales
+- **Print** — one A4 landscape sheet per scale, frozen on the selected key
+
+Use **About** in the sidebar for a full in-app overview.
+
 ## Backlog
 
-Proposed-but-unbuilt features live in [tickets/](tickets/) — currently the EMD
-similarity map (T1), the circular scale glyph (T2), and scale-as-rhythm
-sonification (T3).
+Shipped tickets (T1 ego-network, T2 glyph, T3 rhythm) are documented in
+[tickets/](tickets/). Deferred: full similarity atlas (MDS/UMAP), glyph comparison
+mode (stack two scales with transport arrows), chords-within-scales panel.
+
+AI agent guidance: [AGENTS.md](AGENTS.md).

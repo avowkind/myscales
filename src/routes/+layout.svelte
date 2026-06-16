@@ -8,6 +8,11 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<title>ScaleShaper</title>
+	<meta
+		name="description"
+		content="Actively shape your understanding of scale structure, fingering, and sound."
+	/>
 </svelte:head>
 
 <div class="app">

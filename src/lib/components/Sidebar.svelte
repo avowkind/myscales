@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
+	import AboutDialog from './AboutDialog.svelte';
 	import ScaleGlyph from './ScaleGlyph.svelte';
 	import {
 		namedByFamily,
@@ -8,9 +9,12 @@
 		search,
 		signatureLabel,
 		FAMILY_COLOR,
+		getScale,
 		type ScaleRecord
 	} from '$lib/catalog';
 
+	const logo = getScale('kumoi');
+	let aboutOpen = $state(false);
 	let query = $state('');
 	let groups = namedByFamily();
 	let results = $derived(query.trim() ? search(query) : []);
@@ -21,7 +25,16 @@
 </script>
 
 <nav class="sidebar">
-	<a class="brand" href="{base}/scale/major">MyScales</a>
+	<a class="brand" href="{base}/scale/major">
+		{#if logo}
+			<ScaleGlyph steps={logo.steps} size={26} />
+		{/if}
+		<span class="brand-text">ScaleShaper</span>
+	</a>
+	<p class="tagline">Actively shape your understanding of scale structure, fingering, and sound.</p>
+
+	<button type="button" class="about-btn no-print" onclick={() => (aboutOpen = true)}>About</button>
+	<AboutDialog bind:open={aboutOpen} />
 
 	<input class="search" placeholder="search name, mood, tune…" bind:value={query} />
 
@@ -74,12 +87,43 @@
 		font-size: 0.9rem;
 	}
 	.brand {
-		display: block;
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
 		font-weight: 800;
 		font-size: 1.2rem;
 		color: var(--accent);
 		text-decoration: none;
+		margin-bottom: 0.25rem;
+	}
+	.brand :global(svg.glyph) {
+		flex: 0 0 auto;
+	}
+	.brand-text {
+		line-height: 1.15;
+	}
+	.tagline {
+		margin: 0 0 0.45rem;
+		font-size: 0.72rem;
+		line-height: 1.35;
+		color: var(--ink-soft);
+	}
+	.about-btn {
+		display: block;
+		width: 100%;
 		margin-bottom: 0.75rem;
+		padding: 0.38rem 0.55rem;
+		border: 1px solid #c8cad4;
+		border-radius: 6px;
+		background: #e4e6ee;
+		color: var(--ink);
+		font-size: 0.82rem;
+		font-weight: 600;
+		cursor: pointer;
+		text-align: center;
+	}
+	.about-btn:hover {
+		background: #d8dbe6;
 	}
 	.search {
 		width: 100%;

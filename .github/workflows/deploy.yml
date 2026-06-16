@@ -39,7 +39,7 @@ jobs:
 
       - run: pnpm build
         env:
-          BASE_PATH: /myscales
+          BASE_PATH: /scaleshaper
 
       # GitHub Pages has no SPA rewrite: 404.html is the client-side fallback.
       # Copy it to index.html so the site root serves a clean 200.

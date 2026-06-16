@@ -2,10 +2,10 @@ import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
-// Project is published to GitHub Pages under https://<user>.github.io/myscales/,
-// so the production build is served from the /myscales base path. For a custom
+// Project is published to GitHub Pages under https://<user>.github.io/scaleshaper/,
+// so the production build is served from the /scaleshaper base path. For a custom
 // domain or a <user>.github.io repo, set BASE_PATH='' (root).
-const base = process.env.BASE_PATH ?? (process.env.NODE_ENV === 'production' ? '/myscales' : '');
+const base = process.env.BASE_PATH ?? (process.env.NODE_ENV === 'production' ? '/scaleshaper' : '');
 
 export default defineConfig({
 	plugins: [
