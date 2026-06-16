@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import ScaleGlyph from '$lib/components/ScaleGlyph.svelte';
 	import {
 		explorerScales,
 		signatureLabel,
@@ -48,10 +49,12 @@
 			class="cell"
 			class:named
 			href="{base}/scale/{s.id}"
-			title={named ? `${s.name} · ${FAMILY_LABEL[s.family]}` : s.id}
+			title={named
+				? `${s.name} · ${FAMILY_LABEL[s.family]} · ${signatureLabel(s)}`
+				: signatureLabel(s)}
 			style={named ? `background:${c.fill};border-color:${c.accent}` : ''}
 		>
-			<span class="sig">{signatureLabel(s)}</span>
+			<ScaleGlyph steps={s.steps} size={46} />
 			{#if named}<span class="nm">{s.name}</span>{/if}
 		</a>
 	{/each}
@@ -104,15 +107,16 @@
 		border: 1px solid var(--line-faint);
 		border-left-width: 1px;
 		border-radius: 6px;
-		padding: 0.4rem 0.5rem;
+		padding: 0.5rem;
 		text-align: center;
 		text-decoration: none;
 		color: var(--ink);
 		background: var(--bg-card);
 		display: flex;
 		flex-direction: column;
-		gap: 0.1rem;
-		min-height: 2.4rem;
+		align-items: center;
+		gap: 0.2rem;
+		min-height: 3.6rem;
 		justify-content: center;
 	}
 	.cell.named {

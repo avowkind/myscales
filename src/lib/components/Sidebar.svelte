@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
+	import ScaleGlyph from './ScaleGlyph.svelte';
 	import {
 		namedByFamily,
 		routeOf,
@@ -31,7 +32,10 @@
 				<div class="empty">no matches</div>
 			{/if}
 			{#each results as s}
-				<a class="item" class:active={active(s)} href="{base}/scale/{routeOf(s)}">{s.name}</a>
+				<a class="item" class:active={active(s)} href="{base}/scale/{routeOf(s)}">
+					<ScaleGlyph steps={s.steps} size={20} />
+					<span class="nm">{s.name}</span>
+				</a>
 			{/each}
 		</div>
 	{:else}
@@ -42,7 +46,9 @@
 				</div>
 				{#each g.scales as s}
 					<a class="item" class:active={active(s)} href="{base}/scale/{routeOf(s)}">
-						{s.name}<span class="sig">{signatureLabel(s)}</span>
+						<ScaleGlyph steps={s.steps} size={20} />
+						<span class="nm">{s.name}</span>
+						<span class="sig">{signatureLabel(s)}</span>
 					</a>
 				{/each}
 			</div>
@@ -106,13 +112,19 @@
 	}
 	.item {
 		display: flex;
-		justify-content: space-between;
-		align-items: baseline;
-		gap: 0.5rem;
-		padding: 0.28rem 0.5rem;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.22rem 0.5rem;
 		border-radius: 5px;
 		color: var(--ink);
 		text-decoration: none;
+	}
+	.item :global(svg.glyph) {
+		flex: 0 0 auto;
+	}
+	.nm {
+		flex: 1;
+		min-width: 0;
 	}
 	.item:hover {
 		background: var(--hover);

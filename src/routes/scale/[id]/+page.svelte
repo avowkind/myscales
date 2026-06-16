@@ -16,6 +16,7 @@
 	import IntervalLine from '$lib/components/IntervalLine.svelte';
 	import Keyboard from '$lib/components/Keyboard.svelte';
 	import NotationStave from '$lib/components/NotationStave.svelte';
+	import ScaleGlyph from '$lib/components/ScaleGlyph.svelte';
 
 	let scale = $derived(getScale($page.params.id));
 	let tonic = $derived<Tonic>(KEY_CHOICES[prefs.tonicPc][prefs.pref]);
@@ -36,12 +37,15 @@
 {:else}
 	<header class="head">
 		<div class="title-block">
-			<h1>{displayName(scale)}</h1>
-			<p class="meta">
-				{#if scale.parent}<span class="badge">{scale.parent.text}</span>{/if}
-				{#if scale.mood}<span class="mood">{scale.mood}</span>{/if}
-				{#if scale.colour}<span class="colour">· {scale.colour}</span>{/if}
-			</p>
+			<ScaleGlyph steps={scale.steps} size={66} />
+			<div>
+				<h1>{displayName(scale)}</h1>
+				<p class="meta">
+					{#if scale.parent}<span class="badge">{scale.parent.text}</span>{/if}
+					{#if scale.mood}<span class="mood">{scale.mood}</span>{/if}
+					{#if scale.colour}<span class="colour">· {scale.colour}</span>{/if}
+				</p>
+			</div>
 		</div>
 
 		<div class="controls no-print">
@@ -159,6 +163,11 @@
 		border-bottom: 2px solid var(--line-soft);
 		padding-bottom: 0.6rem;
 		margin-bottom: 0.8rem;
+	}
+	.title-block {
+		display: flex;
+		align-items: center;
+		gap: 0.9rem;
 	}
 	h1 {
 		margin: 0;
