@@ -24,9 +24,17 @@ carries its rhythm, for free, in its `steps`.
 ## Feature
 
 A **"play as rhythm"** mode on each scale page: sound the scale's onsets as a
-**looping click pattern** over a 12-pulse cycle, with a **slight accent on beat 1
-(the root)** so the period is audible. Plain clicks (a wood-block / rim voice), a
-tempo control, and loop on/off. No new data — reuses `steps` and the audio engine.
+**looping wood-block click pattern**, with a **slight accent on beat 1 (the root)**
+so the period is audible. Tempo control and loop on/off. No new data — reuses `steps`
+and the audio engine.
+
+Two **readings**, toggleable:
+- **12-pulse (chromatic) — default.** Onsets on a 12-unit grid at the scale's pitch
+  classes; inter-onset intervals = `steps`. This is the authentic deep rhythm, e.g.
+  the diatonic `[x . x . x x . x . x . x]`.
+- **n-pulse (meter).** The *n* notes as *n* isochronous beats — the scale heard as a
+  metre of *n* (a 7-beat bar for the diatonic, 5 for pentatonic), downbeat accented.
+  Strips the chromatic spacing to foreground cardinality and pulse.
 
 ## Visuals
 
@@ -41,9 +49,10 @@ tempo control, and loop on/off. No new data — reuses `steps` and the audio eng
 
 A set is **deep** when every interval class occurs a *distinct* number of times. The
 diatonic scale is the prototype: its interval vector `[2,5,4,3,6,1]` has six
-all-different multiplicities. We can flag which catalogue scales are deep as a small
-badge, tying the maths to the sound. Related and worth a mention in the UI:
-**maximally even / Euclidean rhythms**, which the paper connects to evenness.
+all-different multiplicities. **Decided: show a "deep" badge** on the scales that
+qualify (diatonic, harmonic/melodic minor, …), tying the maths to the sound. Also
+surface a **Euclidean / maximally-even** badge where it applies — the paper connects
+evenness to these rhythms.
 
 ## Implementation notes
 
@@ -54,13 +63,13 @@ badge, tying the maths to the sound. Related and worth a mention in the UI:
   distinct) for the badge.
 - Cycle = 12 pulses by default (true to the chromatic scale).
 
-## Open questions
+## Decisions (locked 2026-06-16)
 
-1. Cycle always 12 pulses (true to the scale), or also offer an *n*-pulse "even"
-   reading of the necklace?
-2. Click voice: a single wood-block, or pitched per scale degree (a hybrid
-   melody-and-rhythm)?
-3. Surface the deep / Euclidean badges, or keep it purely a play feature?
+1. **Readings:** offer **both** — 12-pulse chromatic (default) *and* an n-pulse
+   metre reading.
+2. **Voice:** single **wood-block** click (accented downbeat); not pitched per degree.
+3. **Badges:** **show the "deep" badge** (and a Euclidean / maximally-even badge
+   where it applies).
 
 ## Reference
 
